@@ -3,8 +3,7 @@ package com.yue.simpletodo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.yue.simpletodo.models.Todo;
 
@@ -22,18 +21,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUI(@NonNull List<Todo> todos) {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_container);
-        linearLayout.removeAllViews();
-
-        TodoListConverter converter = new TodoListConverter(this, todos);
-
-        for (int i = 0; i < todos.size(); ++i) {
-            View view = converter.getView(i);
-            linearLayout.addView(view);
-        }
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        TodoListAdapter adapter = new TodoListAdapter(this, todos);
+        listView.setAdapter(adapter);
     }
-
-
 
     @NonNull
     private List<Todo> mockData() {
