@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.yue.simpletodo.models.Todo;
 
@@ -25,18 +24,16 @@ public class MainActivity extends AppCompatActivity {
     private void setupUI(@NonNull List<Todo> todos) {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.list_container);
         linearLayout.removeAllViews();
-        for (Todo todo : todos) {
-            View view = getListItemView(todo);
+
+        TodoListConverter converter = new TodoListConverter(this, todos);
+
+        for (int i = 0; i < todos.size(); ++i) {
+            View view = converter.getView(i);
             linearLayout.addView(view);
         }
     }
 
-    @NonNull
-    private View getListItemView(@NonNull Todo todo) {
-        View view = getLayoutInflater().inflate(R.layout.todo_list_item, null);
-        ((TextView) view.findViewById(R.id.todo_list_item_text)).setText(todo.text);
-        return view;
-    }
+
 
     @NonNull
     private List<Todo> mockData() {
