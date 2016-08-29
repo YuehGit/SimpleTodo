@@ -39,13 +39,17 @@ public class TodoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) { // convertView: Recycle view
+        if (convertView == null) {
+            Log.d("new view", "new view for position " + position); // check how many views was created
+            convertView = LayoutInflater.from(context).inflate(R.layout.todo_list_item, parent, false);
+        }
+
         Todo todo = data.get(position);
 
-        Log.d("listview", "position " + position); // check the "lazy load" attr of listview
+        Log.d("listview", "position " + position); // check which view was got by listview
 
-        View view = LayoutInflater.from(context).inflate(R.layout.todo_list_item, null);
-        ((TextView) view.findViewById(R.id.todo_list_item_text)).setText(todo.text);
-        return view;
+        ((TextView) convertView.findViewById(R.id.todo_list_item_text)).setText(todo.text);
+        return convertView;
     }
 }
