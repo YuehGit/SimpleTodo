@@ -39,17 +39,35 @@ public class TodoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) { // convertView: Recycle view
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // convertView: Recycle view
+        ViewHolder viewHolder;
+
         if (convertView == null) {
-            Log.d("new view", "new view for position " + position); // check how many views was created
+            Log.d("new view", "new view for position " + position);
+            // check how many views was created
             convertView = LayoutInflater.from(context).inflate(R.layout.todo_list_item, parent, false);
+
+            viewHolder = new ViewHolder();
+            // only find once
+            viewHolder.todoText = (TextView) convertView.findViewById(R.id.todo_list_item_text);
+            // cache the view holder
+        } else {
+            // convertView is not null, which means it contains a cached view holder
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         Todo todo = data.get(position);
 
-        Log.d("listview", "position " + position); // check which view was got by listview
+        Log.d("listview", "position " + position);
+        // check which view was got by listview
 
-        ((TextView) convertView.findViewById(R.id.todo_list_item_text)).setText(todo.text);
+        viewHolder.todoText.setText(todo.text);
         return convertView;
+    }
+
+    // static class for high efficiency
+    private static class ViewHolder {
+        TextView todoText;
     }
 }
