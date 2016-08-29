@@ -2,6 +2,7 @@ package com.yue.simpletodo;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,8 @@ public class TodoListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Todo todo = data.get(position);
+
+        Log.d("listview", "position " + position); // check the "lazy load" attr of listview
 
         View view = LayoutInflater.from(context).inflate(R.layout.todo_list_item, null);
         ((TextView) view.findViewById(R.id.todo_list_item_text)).setText(todo.text);
