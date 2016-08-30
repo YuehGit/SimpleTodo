@@ -2,18 +2,16 @@ package com.yue.simpletodo;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.yue.simpletodo.models.Todo;
 
 import java.util.List;
 
-public class TodoListAdapter extends BaseAdapter {
+public class TodoListAdapter extends ViewHolderAdapter {
 
     private Context context;
     private List<Todo> data;
@@ -39,35 +37,25 @@ public class TodoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // convertView: Recycle view
-        ViewHolder viewHolder;
+    protected ViewHolderAdapter.ViewHolder onCreateViewHolder(int position, ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.todo_list_item, parent, false);
+        return new TodoViewHolder(view);
+    }
 
-        if (convertView == null) {
-            Log.d("new view", "new view for position " + position);
-            // check how many views was created
-            convertView = LayoutInflater.from(context).inflate(R.layout.todo_list_item, parent, false);
-
-            viewHolder = new ViewHolder();
-            // only find once
-            viewHolder.todoText = (TextView) convertView.findViewById(R.id.todo_list_item_text);
-            // cache the view holder
-        } else {
-            // convertView is not null, which means it contains a cached view holder
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
+    @Override
+    protected ViewHolderAdapter.ViewHolder onBindViewHolder(int position, ViewHolderAdapter.ViewHolder viewHolder) {
         Todo todo = data.get(position);
-
-        Log.d("listview", "position " + position);
-        // check which view was got by listview
-
-        viewHolder.todoText.setText(todo.text);
-        return convertView;
+        ((TodoViewHolder) viewHolder).todoText.setText(todo.text);
+        return null;
     }
 
     // static class for high efficiency
-    private static class ViewHolder {
+    private static class TodoViewHolder extends ViewHolderAdapter.ViewHolder {
         TextView todoText;
+
+        public TodoViewHolder(View view) {
+            super(view);
+            todoText = (TextView) view.findViewById(R.id.todo_list_item_text);
+        }
     }
 }
