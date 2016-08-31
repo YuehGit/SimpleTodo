@@ -1,24 +1,26 @@
 package com.yue.simpletodo;
 
-
-import android.content.Context;
-import android.view.LayoutInflater;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.yue.simpletodo.models.Todo;
+import com.yue.simpletodo.utils.UIUtils;
 
 import java.util.List;
 
-public class TodoListAdapter extends ViewHolderAdapter {
+public class TodoListAdapter extends BaseAdapter {
 
-    private Context context;
+    private MainActivity activity;
     private List<Todo> data;
 
-    public TodoListAdapter(Context context, List<Todo> todos) {
-        this.context = context;
-        this.data = todos;
+    public TodoListAdapter(MainActivity activity, List<Todo> data) {
+        this.activity = activity;
+        this.data = data;
     }
 
     @Override
@@ -37,25 +39,45 @@ public class TodoListAdapter extends ViewHolderAdapter {
     }
 
     @Override
-    protected ViewHolderAdapter.ViewHolder onCreateViewHolder(int position, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.todo_list_item, parent, false);
-        return new TodoViewHolder(view);
-    }
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = activity.getLayoutInflater().inflate(R.layout.todo_list_item, parent, false);
 
-    @Override
-    protected ViewHolderAdapter.ViewHolder onBindViewHolder(int position, ViewHolderAdapter.ViewHolder viewHolder) {
-        Todo todo = data.get(position);
-        ((TodoViewHolder) viewHolder).todoText.setText(todo.text);
-        return null;
+            viewHolder = new ViewHolder();
+            viewHolder.todoText = (TextView) convertView.findViewById(R.id.todo_list_item_text);
+            viewHolder.doneCheckBox = (CheckBox) convertView.findViewById(R.id.todo_list_item_check);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        final Todo todo = (Todo) getItem(position);
+        viewHolder.todoText.setText(todo.text);
+        viewHolder.doneCheckBox.setChecked(todo.done);
+        UIUtils.setTextViewStrikeThrough(viewHolder.todoText, todo.done);
+
+        viewHolder.doneCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                activity.updateTodo(position, isChecked);
+            }
+        });
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, TodoEditActivity.class);
+                intent.putExtra(TodoEditActivity.KEY_TODO, todo);
+                activity.startActivityForResult(intent, MainActivity.REQ_CODE_TODO_EDIT);
+            }
+        });
+        return convertView;
     }
 
     // static class for high efficiency
-    private static class TodoViewHolder extends ViewHolderAdapter.ViewHolder {
+    private static class ViewHolder {
         TextView todoText;
-
-        public TodoViewHolder(View view) {
-            super(view);
-            todoText = (TextView) view.findViewById(R.id.todo_list_item_text);
-        }
+        CheckBox doneCheckBox;
     }
 }
