@@ -35,6 +35,7 @@ public class TodoEditActivity extends AppCompatActivity implements
 
     public static final String KEY_TODO = "todo";
     public static final String KEY_TODO_ID = "todo_id";
+    public static final String KEY_NOTIFICATION_ID = "notification_id";
 
     private EditText todoEdit;
     private TextView dataTextView;
@@ -204,8 +205,8 @@ public class TodoEditActivity extends AppCompatActivity implements
         todo.done = completeCheckBox.isChecked();
 
         // fire alarm when saving the todo_item
-        if (remindDate != null) {
-            AlarmUtils.setAlarm(this, remindDate);
+        if (todo.remindDate != null) {
+            AlarmUtils.setAlarm(this, todo);
         }
 
         Intent result = new Intent();
