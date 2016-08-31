@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.yue.simpletodo.models.Todo;
+import com.yue.simpletodo.utils.AlarmUtils;
 import com.yue.simpletodo.utils.DateUtils;
 import com.yue.simpletodo.utils.UIUtils;
 
@@ -201,6 +202,11 @@ public class TodoEditActivity extends AppCompatActivity implements
         }
 
         todo.done = completeCheckBox.isChecked();
+
+        // fire alarm when saving the todo_item
+        if (remindDate != null) {
+            AlarmUtils.setAlarm(this, remindDate);
+        }
 
         Intent result = new Intent();
         result.putExtra(KEY_TODO, todo);

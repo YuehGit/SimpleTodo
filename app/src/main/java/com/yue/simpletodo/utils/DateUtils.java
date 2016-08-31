@@ -43,6 +43,6 @@ public class DateUtils {
 
     @NonNull
     public static String dateToStringTime(@NonNull Date date) {
-        return dateFormatDate.format(date);
+        return dateFormatTime.format(date);
     }
 }

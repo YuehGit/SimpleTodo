@@ -88,8 +88,8 @@
                 android:padding="@dimen/spacing_medium"
                 android:textSize="@dimen/todo_edit_body_font_size"
                 android:background="?attr/selectableItemBackground"
-                tools:text="21:00"
-                />
+                tools:text="21:00" />
+
         </LinearLayout>
 
         <TextView
